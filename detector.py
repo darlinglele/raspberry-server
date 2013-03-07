@@ -1,6 +1,11 @@
 import threading
 import RPi.GPIO as GPIO
 import time
+
+class Info:
+	@staticmethod
+	def p(message):
+		print 'Info: '+message 
 class Detector:
 	def __init__(self, pin):
 		self.pin = pin
@@ -26,36 +31,78 @@ class Detector:
 		self.handlerlist.append(handler)
 
 class Wheel:
-	pins ={'a':13,'b':15,'c':16,'d':18}
+	pins ={'a':[13,15],'b':[16,18],'c':[19,21],'d':[22,24]}
 	def __init__(self,name):
 		self.name = name
 		self.pin = Wheel.pins[self.name]
 		GPIO.setmode(GPIO.BOARD)
-		GPIO.setup(self.pin,GPIO.OUT)
-	def go(self):
-		Info.p('wheel ' + self.name + ' is runing')
-		GPIO.output(self.pin,True)
-	def stop(self):	
-		Info.p('wheel ' + self.name + ' is stoping')
-		GPIO.output(self.pin, False)
+		GPIO.setup(self.pin[0],GPIO.OUT)
+		GPIO.setup(self.pin[1],GPIO.OUT)
+		self.stop()
+	def st(self):
+		print 'ss'
+	def forward(self):
+		Info.p('wheel ' + self.name + ' is forwarding')
+		GPIO.output(self.pin[0],True)
+		GPIO.output(self.pin[1],False)
+	def stop(self):
+		GPIO.output(self.pin[0],False)
+		GPIO.output(self.pin[1],False)
+	def back(self):
+		Info.p('wheel ' +self.name + ' is backing')
+		GPIO.output(self.pin[0],False)
+		GPIO.output(self.pin[1],True)
+		
 		
 class Car:
+	#wheel=[Wheel('a'),Wheel('b'),Wheel('c'),Wheel('d')] 
 	wheel=[Wheel('a'),Wheel('b'),Wheel('c'),Wheel('d')] 
-
+	far = Detector(11)
 	@staticmethod
 	def init():
+		GPIO.setmode(GPIO.BOARD)
 		Info.p('initialize the smart car ....')		
 		Info.p('Smart car is ready to fly!')
-
+		Car.far.start()
 	@staticmethod
 	def forward():
 		Info.p('go straight forward')
 		for wheel in Car.wheel:
-			wheel.go()
-
+			wheel.forward()
+	@staticmethod
+	def fleft():
+		Info.p('turn left ')
+		Car.wheel[0].forward()	
+		Car.wheel[1].forward()
+		Car.wheel[3].back()
+		Car.wheel[2].back()
+	@staticmethod
+	def fright():
+		Info.p('turn left ')
+		Car.wheel[1].forward()	
+	@staticmethod
+	def bleft():
+		Info.p('turn left ')
+		Car.wheel[2].back()	
+	@staticmethod
+	def bright():
+		Info.p('turn left ')
+		Car.wheel[0].back()	
+		Car.wheel[1].back()	
+		Car.wheel[3].forward()
+		Car.wheel[2].forward()
+	@staticmethod
+	def stop():
+		Info.p('turn left ')
+		Car.wheel[0].stop()	
+		Car.wheel[1].stop()	
+		Car.wheel[3].stop()
+		Car.wheel[2].stop()
 	@staticmethod
 	def back():
 		Info.p('go straight back')
+		for wheel in Car.wheel:
+			wheel.back()
 
 	@staticmethod
 	def lforward():
@@ -86,10 +133,6 @@ class Car:
 		Info.p('try to speed up the car ...')
 
 
-class Info:
-	@staticmethod
-	def p(message):
-		print 'Info: '+message 
 
 def followthing():
 	print 'following the target...';
@@ -108,8 +151,34 @@ def Detecter_example():
 	far.destory()
 	near.destory()
 def car_example():
-	Car.forward()
-	Car.stop()
+	try:
+		Car.init()
+		def handler():
+			print 'found something'
+			Car.stop()
+		Car.far.addhandler(handler)
+		#Car.fleft()
+		#time.sleep(4)
+		#Car.bright()
+        	#Car.forward()
+		time.sleep(2)
+		#Car.back()
+		time.sleep(2)
+		#Car.fright()
+		#time.sleep(2)
+		#Car.fleft()
+		#time.sleep(2)
+		#Car.bleft()
+		#time.sleep(2)
+		#Car.bright()
+		#time.sleep(2)
+ 		#Car.stop()
+	except:  
+		print 'Error occured'
+		import traceback
+		traceback.print_exc()
+	else:
+		GPIO.cleanup()
 
 
 car_example()
