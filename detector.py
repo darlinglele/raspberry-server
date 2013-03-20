@@ -43,8 +43,8 @@ class Wheel:
 		print 'ss'
 	def forward(self):
 		Info.p('wheel ' + self.name + ' is forwarding')
-		GPIO.output(self.pin[0],True)
-		GPIO.output(self.pin[1],False)
+		GPIO.output(self.pin[0],GPIO.HIGH)
+		GPIO.output(self.pin[1],GPIO.LOW)
 	def stop(self):
 		GPIO.output(self.pin[0],False)
 		GPIO.output(self.pin[1],False)
@@ -57,29 +57,32 @@ class Wheel:
 class Car:
 	#wheel=[Wheel('a'),Wheel('b'),Wheel('c'),Wheel('d')] 
 	wheel=[Wheel('a'),Wheel('b'),Wheel('c'),Wheel('d')] 
-	far = Detector(11)
+	#far = Detector(11)
 	@staticmethod
 	def init():
 		GPIO.setmode(GPIO.BOARD)
 		Info.p('initialize the smart car ....')		
 		Info.p('Smart car is ready to fly!')
-		Car.far.start()
+		#Car.far.start()
 	@staticmethod
 	def forward():
 		Info.p('go straight forward')
 		for wheel in Car.wheel:
 			wheel.forward()
 	@staticmethod
-	def fleft():
+	def left():
 		Info.p('turn left ')
 		Car.wheel[0].forward()	
 		Car.wheel[1].forward()
 		Car.wheel[3].back()
 		Car.wheel[2].back()
 	@staticmethod
-	def fright():
+	def right():
 		Info.p('turn left ')
-		Car.wheel[1].forward()	
+		Car.wheel[2].forward()	
+		Car.wheel[3].forward()
+		Car.wheel[0].back()
+		Car.wheel[1].back()
 	@staticmethod
 	def bleft():
 		Info.p('turn left ')
@@ -152,18 +155,18 @@ def Detecter_example():
 	near.destory()
 def car_example():
 	try:
-		Car.init()
+		#Car.init()
 		def handler():
 			print 'found something'
 			Car.stop()
-		Car.far.addhandler(handler)
+		#Car.far.addhandler(handler)
 		#Car.fleft()
-		#time.sleep(4)
+		#time.sleep(1)
 		#Car.bright()
         	#Car.forward()
-		time.sleep(2)
+		#time.sleep(1)
 		#Car.back()
-		time.sleep(2)
+		#time.sleep(1)
 		#Car.fright()
 		#time.sleep(2)
 		#Car.fleft()
@@ -181,4 +184,4 @@ def car_example():
 		GPIO.cleanup()
 
 
-car_example()
+#car_example()
