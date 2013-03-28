@@ -7,12 +7,15 @@ def execute(command):
 	print command
 
 def recv(conn):
-    while 1:
-            command= conn.recv(1024).replace('\n','')
-            if not command:break
-            execute(command)
-   	    resp(conn, 'Hello Guy!')	   
-    conn.close()
+	name = conn.recv(1024).replace('\n','')
+	conn_list[name]=conn
+	print name+ ' is connected'
+	resp(conn,'Server: Hi'+ name)
+    	while 1:
+    	        command= conn.recv(1024).replace('\n','')
+    	        execute(command)
+    	        resp(conn, 'Hello Guy!')	   
+    	conn.close()
 
 def resp(conn,msg):
 	try:
@@ -32,7 +35,6 @@ print ('listening on 8888')
 conn_list ={}
 while 1:
     conn, addr = s.accept()
-    conn_list[addr] = conn
     print ('Connected by:', addr)
     t=threading.Thread(target = recv, args=(conn,))
     t.start()
