@@ -26,6 +26,8 @@ def closeall():
 def close(name):
 	conn_list[name].close()
 
-t = threading.Thread(target = connect, args=('C',))
+t = threading.Thread(target = connect, args=('D',))
 t.start()
-
+while 1:
+	input=sys.stdin.readline();
+	send(input, 'D')

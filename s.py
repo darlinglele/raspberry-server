@@ -5,14 +5,26 @@ import time
 
 def execute(command):
 	print command
-
+	
+	
+def getallconn():
+	return conn_list
+def printallconn():
+	print 'All connections:'
+	print conn_list.keys()
 def recv(conn):
 	name = conn.recv(1024).replace('\n','')
 	conn_list[name]=conn
 	print name+ ' is connected'
+	printallconn()
 	resp(conn,'Server: Hi'+ name)
     	while 1:
     	        command= conn.recv(1024).replace('\n','')
+		if not command:
+			print 'connection with '+ name +' has been closed'
+			conn_list.pop(name)
+			printallconn()
+			break
     	        execute(command)
     	        resp(conn, 'Hello Guy!')	   
     	conn.close()
