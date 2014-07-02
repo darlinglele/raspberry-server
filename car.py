@@ -7,6 +7,7 @@ class Info:
 	def p(message):
 		print 'Info: '+message 
 
+#Wheel封装的单个车轮的所有可能操作
 class Wheel:
 	pins ={'a':[13,15],'b':[16,18],'c':[19,21],'d':[22,24]}
 	def __init__(self,name):
@@ -30,17 +31,14 @@ class Wheel:
 		GPIO.output(self.pin[0],False)
 		GPIO.output(self.pin[1],True)
 		
-		
+#Car组合四个轮子所有可能操作		
 class Car:
-	#wheel=[Wheel('a'),Wheel('b'),Wheel('c'),Wheel('d')] 
 	wheel=[Wheel('a'),Wheel('b'),Wheel('c'),Wheel('d')] 
-	#far = Detector(11)
 	@staticmethod
 	def init():
 		GPIO.setmode(GPIO.BOARD)
 		Info.p('initialize the smart car ....')		
 		Info.p('Smart car is ready to fly!')
-		#Car.far.start()
 	@staticmethod
 	def forward():
 		Info.p('go straight forward')
