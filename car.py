@@ -6,29 +6,6 @@ class Info:
 	@staticmethod
 	def p(message):
 		print 'Info: '+message 
-class Detector:
-	def __init__(self, pin):
-		self.pin = pin
-		self.handlerlist=[]
-		GPIO.setmode(GPIO.BOARD)
-		GPIO.setup(pin, GPIO.IN)
-		Info.p('init a detector on pin '+str(pin))
-	def start(self):
-		Info.p ('detector is listening on pin'+str(self.pin))
-		t = threading.Thread(target = self.run)
-		t.daemon = True 
-		t.start()
-
-	def destory(self):
-		Info.p ('destroy the detector')
-	
-	def run(self):
-		while True:
-			if GPIO.input(self.pin) is False:
-				for handler in self.handlerlist:
-					handler()
-	def addhandler(self,handler):
-		self.handlerlist.append(handler)
 
 class Wheel:
 	pins ={'a':[13,15],'b':[16,18],'c':[19,21],'d':[22,24]}
@@ -135,53 +112,6 @@ class Car:
 	def speedup():
 		Info.p('try to speed up the car ...')
 
-
-
-def followthing():
-	print 'following the target...';
-def stop():
-	print 'too close to target,stopping ....';
-def Detecter_example():
-	far = Detector(11)
-	far.addhandler(followthing)
-	far.start();
-	near = Detector(12)
-	near.start()
-	near.addhandler(stop)
-	time.sleep(5)
-	far.addhandler(stop)
-	time.sleep(20)
-	far.destory()
-	near.destory()
-def car_example():
-	try:
-		#Car.init()
-		def handler():
-			print 'found something'
-			Car.stop()
-		#Car.far.addhandler(handler)
-		#Car.fleft()
-		#time.sleep(1)
-		#Car.bright()
-        	#Car.forward()
-		#time.sleep(1)
-		#Car.back()
-		#time.sleep(1)
-		#Car.fright()
-		#time.sleep(2)
-		#Car.fleft()
-		#time.sleep(2)
-		#Car.bleft()
-		#time.sleep(2)
-		#Car.bright()
-		#time.sleep(2)
- 		#Car.stop()
-	except:  
-		print 'Error occured'
-		import traceback
-		traceback.print_exc()
-	else:
-		GPIO.cleanup()
-
-
-#car_example()
+if __name__ =='__main__':
+	print '....'
+	
